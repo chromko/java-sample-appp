@@ -1,0 +1,11 @@
+--2017-03-24 01:08:06--  https://pubs.vmware.com/vfabric53/topic/com.vmware.vfabric.tc-server.2.9/getting-started/images/springsource.png
+Resolving pubs.vmware.com (pubs.vmware.com)... 23.14.4.161, 2a02:26f0:f:290::2ef, 2a02:26f0:f:287::2ef
+Connecting to pubs.vmware.com (pubs.vmware.com)|23.14.4.161|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 9628 (9.4K) [image/png]
+Saving to: ‘springsource.png’
+
+     0K .........                                             100%  114M=0s
+
+2017-03-24 01:08:07 (114 MB/s) - ‘springsource.png’ saved [9628/9628]
+
