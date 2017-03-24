@@ -37,14 +37,14 @@ public final class Hello extends HttpServlet {
      * @exception ServletException if a servlet error occurs
      */
      private static Connection conn;
-private static DataSource dataSource;
+     private static DataSource dataSource;
 
-    public void doGet(HttpServletRequest request,
+     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
-      throws IOException, ServletException {
+     throws IOException, ServletException {
 
         response.setContentType("text/html");
-        PrintWriter writer = response.getWriter();        
+        PrintWriter writer = response.getWriter();
         writer.println("<html>");
         writer.println("<head>");
         writer.println("<title>Sample Application Servlet Page</title>");
@@ -58,12 +58,12 @@ private static DataSource dataSource;
         writer.println("</td>");
         writer.println("<td>");
         writer.println("<h1>Sample Application Servlet</h1>");
-	try {
-	goToDB (writer);
-	}  catch (SQLException se) {
-                se.printStackTrace();
-        }
-         writer.println("</td>");
+  	try {
+  	goToDB (writer);
+  	}  catch (SQLException se) {
+            se.printStackTrace();
+      }
+        writer.println("</td>");
         writer.println("</tr>");
         writer.println("</table>");
 
@@ -73,33 +73,31 @@ private static DataSource dataSource;
         writer.println("</body>");
         writer.println("</html>");
     }
-	private  void goToDB (PrintWriter writer) throws SQLException {
+	private void goToDB (PrintWriter writer) throws SQLException {
 	try {
-	Context initCtx = new InitialContext();
-	DataSource ds = (DataSource) initCtx.lookup("java:comp/env/jdbc/sampledb");
-	Connection conn = ds.getConnection();
+    Context initCtx = new InitialContext();
+    DataSource ds = (DataSource) initCtx.lookup("java:comp/env/jdbc/sampledb");
+    Connection conn = ds.getConnection();
 	} catch (NamingException ne) {
 		ne.printStackTrace();
 	}
-	
+
 	// Look up our data source
 	// Allocate and use a connection from the pool
 	writer.println("Connection successful!!!");
 	//... use this connection to access the database ...
 	Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT id ,word  FROM samples;");
-	while (rs.next()) {
-		int num = rs.getInt(1);
-		String word = rs.getString(2);
-		writer.println("<tr>");
-		writer.format	("Word %s have %d ", word,num) ;
-		writer.println("</tr>");
+  ResultSet rs = stmt.executeQuery("SELECT id ,word  FROM samples;");
+	  while (rs.next()) {
+		  int num = rs.getInt(1);
+  		String word = rs.getString(2);
+  		writer.println("<tr>");
+  		writer.format	("Word %s have %d ", word,num) ;
+  		writer.println("</tr>");
 		}
 
 	rs.close();
 	stmt.close();
 	conn.close();
-
 	}
 }
-
