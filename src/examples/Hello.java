@@ -24,8 +24,6 @@ import javax.naming.InitialContext;
  */
 
 public final class Hello extends HttpServlet {
-
-
     /**
      * Respond to a GET request for the content produced by
      * this servlet.
@@ -38,6 +36,7 @@ public final class Hello extends HttpServlet {
      */
      private static Connection conn;
      private static DataSource dataSource;
+     private static String query = "SELECT id, word from samples";
 
      public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
@@ -50,7 +49,6 @@ public final class Hello extends HttpServlet {
         writer.println("<title>Sample Application Servlet Page</title>");
         writer.println("</head>");
         writer.println("<body bgcolor=white>");
-
         writer.println("<table border=\"0\" cellpadding=\"10\">");
         writer.println("<tr>");
         writer.println("<td>");
@@ -59,43 +57,40 @@ public final class Hello extends HttpServlet {
         writer.println("<td>");
         writer.println("<h1>Sample Application Servlet</h1>");
   	try {
-  	goToDB (writer);
+  	connect();
+	executeQuery(query,writer);
   	}  catch (SQLException se) {
             se.printStackTrace();
-      }
+  	}  catch (NamingException ne) {
+            ne.printStackTrace();
+      	}
         writer.println("</td>");
         writer.println("</tr>");
         writer.println("</table>");
-
         writer.println("This is the output of a servlet that is part of");
         writer.println("the Hello, World application.");
-
         writer.println("</body>");
         writer.println("</html>");
     }
-	private void goToDB (PrintWriter writer) throws SQLException {
-	try {
-    Context initCtx = new InitialContext();
-    DataSource ds = (DataSource) initCtx.lookup("java:comp/env/jdbc/sampledb");
-    Connection conn = ds.getConnection();
-	} catch (NamingException ne) {
-		ne.printStackTrace();
+	public void connect() throws SQLException,NamingException {
+    	Context initCtx = new InitialContext();
+    	Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    	DataSource ds = (DataSource) envCtx.lookup("jdbc/sampledb");
+    	conn = ds.getConnection();
 	}
-
+	public void executeQuery (String query,PrintWriter writer) throws SQLException,NamingException {
 	// Look up our data source
 	// Allocate and use a connection from the pool
-	writer.println("Connection successful!!!");
 	//... use this connection to access the database ...
 	Statement stmt = conn.createStatement();
-  ResultSet rs = stmt.executeQuery("SELECT id ,word  FROM samples;");
-	  while (rs.next()) {
-		  int num = rs.getInt(1);
-  		String word = rs.getString(2);
+	ResultSet rs = stmt.executeQuery(query);
+	while (rs.next()) {
+		int num = rs.getInt("id");
+  		String word = rs.getString("word");
   		writer.println("<tr>");
   		writer.format	("Word %s have %d ", word,num) ;
   		writer.println("</tr>");
 		}
-
 	rs.close();
 	stmt.close();
 	conn.close();
